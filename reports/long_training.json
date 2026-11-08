@@ -1,0 +1,21 @@
+{
+  "mode": "long",
+  "rows": 114849,
+  "train_rows": 103338,
+  "validation_rows": 11511,
+  "labels": 235,
+  "dimensions": 768,
+  "sparsity": 4,
+  "channels": 8,
+  "n_values": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "validation_accuracy": 0.9190339675093389,
+  "source_counts": {
+    "wili": 114849,
+    "tatoeba": 0
+  }
+}

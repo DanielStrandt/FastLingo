@@ -28,9 +28,9 @@ def profile(path: Path, mode: str, iterations: int):
     return {'mode': mode, 'model': str(path), 'model_bytes': path.stat().st_size, 'load_ms': load_ms, 'python_heap_peak_during_predict_bytes': peak, 'labels': len(model.labels), 'dimensions': model.dimensions, 'channels': len(model.weights), 'n_values': list(model.n_values), 'platform': platform.platform(), 'python': platform.python_version(), 'cpu_count': os.cpu_count(), 'iterations_per_length': iterations, 'latency_by_characters': latency}
 
 def main():
-    p = argparse.ArgumentParser(); p.add_argument('--mode', choices=['short', 'long', 'both'], default='both'); p.add_argument('--iterations', type=int, default=200); p.add_argument('--output', type=Path, default=Path('compact_hdc_v1/reports/detailed_benchmark.json')); a = p.parse_args()
+    p = argparse.ArgumentParser(); p.add_argument('--mode', choices=['short', 'long', 'both'], default='both'); p.add_argument('--iterations', type=int, default=200); p.add_argument('--output', type=Path, default=Path('reports/detailed_benchmark.json')); a = p.parse_args()
     modes = ['short', 'long'] if a.mode == 'both' else [a.mode]
-    reports = {mode: profile(Path(f'compact_hdc_v1/artifacts/lid235_{mode}.npz'), mode, a.iterations) for mode in modes}
+    reports = {mode: profile(Path(f'artifacts/lid235_{mode}.npz'), mode, a.iterations) for mode in modes}
     a.output.parent.mkdir(parents=True, exist_ok=True); a.output.write_text(json.dumps(reports, indent=2), encoding='utf8'); print(json.dumps(reports, indent=2))
 
 if __name__ == '__main__': main()

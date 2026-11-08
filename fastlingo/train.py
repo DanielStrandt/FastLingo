@@ -21,7 +21,7 @@ def select_rows(manifest, mode):
  return rows
 
 def main():
- p=argparse.ArgumentParser(); p.add_argument('--mode',choices=['short','long'],required=True); p.add_argument('--manifest',type=Path,default=Path('data/mixture/manifest.jsonl')); p.add_argument('--wili-dir',type=Path,default=Path('data/raw/wili-2018')); p.add_argument('--output',type=Path); p.add_argument('--report',type=Path); a=p.parse_args(); a.output=a.output or Path(f'compact_hdc_v1/artifacts/lid235_{a.mode}.npz'); a.report=a.report or Path(f'compact_hdc_v1/reports/{a.mode}_training.json')
+ p=argparse.ArgumentParser(); p.add_argument('--mode',choices=['short','long'],required=True); p.add_argument('--manifest',type=Path,default=Path('data/mixture/manifest.jsonl')); p.add_argument('--wili-dir',type=Path,default=Path('data/raw/wili-2018')); p.add_argument('--output',type=Path); p.add_argument('--report',type=Path); a=p.parse_args(); a.output=a.output or Path(f'artifacts/lid235_{a.mode}.npz'); a.report=a.report or Path(f'reports/{a.mode}_training.json')
  labels,names,_=read_metadata(a.wili_dir); idx={x:i for i,x in enumerate(labels)}; rows=select_rows(a.manifest,a.mode); rows=[r for r in rows if r['label'] in idx and r['text'].strip()]
  if not rows: raise ValueError('No rows selected')
  n_values=(2,3,4,5) if a.mode=='short' else (1,2,3,4); dimensions=768; sparsity=4; channels_count=2*len(n_values)

@@ -1,0 +1,8 @@
+{
+  "mode": "long",
+  "model": "compact_hdc_v1\\artifacts\\lid235_long.npz",
+  "labels": 235,
+  "examples": 117500,
+  "accuracy": 0.9210127659574469,
+  "macro_f1": 0.9254135231851166
+}

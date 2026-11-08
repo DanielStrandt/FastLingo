@@ -39,7 +39,7 @@ def main():
     p = argparse.ArgumentParser(); p.add_argument('--mode', choices=['short', 'long'], required=True)
     p.add_argument('--model', type=Path); p.add_argument('--wili-dir', type=Path, default=Path('data/raw/wili-2018'))
     p.add_argument('--manifest', type=Path, default=Path('data/mixture/manifest.jsonl')); p.add_argument('--report', type=Path)
-    a = p.parse_args(); a.model = a.model or Path(f'compact_hdc_v1/artifacts/lid235_{a.mode}.npz'); a.report = a.report or Path(f'compact_hdc_v1/reports/{a.mode}_test.json')
+    a = p.parse_args(); a.model = a.model or Path(f'artifacts/lid235_{a.mode}.npz'); a.report = a.report or Path(f'reports/{a.mode}_test.json')
     labels, _, _ = read_metadata(a.wili_dir); label_set = set(labels); model = CompactIdentifier(a.model)
     if a.mode == 'long':
         rows = ((text, label) for _, text, label in iter_split(a.wili_dir, 'test') if label in label_set)

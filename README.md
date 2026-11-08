@@ -36,10 +36,11 @@ From the repository root:
 
 ```powershell
 python -m pip install -r requirements.txt
+python -m fastlingo.train --mode long
 python -c "from fastlingo.model import CompactIdentifier; print(CompactIdentifier('artifacts/lid235_long.npz').predict('This is an English sentence.'))"
 ```
 
-The model artifacts are distributed as release assets because GitHub source commits are intended to stay text-first. See [Reproducing the models](#reproducing-the-models) to train them locally.
+The source repository intentionally omits binary model artifacts. Train them locally with the reproducible commands below, or distribute a separately reviewed release asset with its own checksum and data-rights notice.
 
 ## Reproducing the models
 

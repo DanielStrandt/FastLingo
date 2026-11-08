@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+title: "FastLingo: Compact HDC Language Identification"
+message: "If you use FastLingo, please cite the software and the underlying WiLI-2018 and Tatoeba resources."
+type: software
+authors:
+  - family-names: Strandt
+    given-names: Daniel
+repository-code: "https://github.com/DanielStrandt/FastLingo"
+license: MIT
+version: "0.1.0"
+keywords:
+  - language identification
+  - hyperdimensional computing
+  - edge inference
+  - multilingual NLP

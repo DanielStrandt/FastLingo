@@ -40,7 +40,7 @@ For low-latency deployment, install the optional compiled numeric path:
     python -m pip install -r requirements-accelerated.txt
     python -c "from fastlingo.accelerated import AcceleratedIdentifier; print(AcceleratedIdentifier('artifacts/lid235_long.npz').predict('This is an English sentence.'))"
 
-On the recorded Windows 11 host, the accelerated long model measured **0.476 ms p50**, **0.581 ms p95**, and **0.701 ms p99** for a representative input, versus roughly 3 ms for the reference Python path. It agreed with the reference model on **15,456 of 15,457** multilingual external examples (99.9935%). This is a Python+Numba optimization and is still not a native-to-native comparison with fastText; the full native implementation remains a future optimization step.
+On the recorded Windows 11 host, the accelerated short model measured **0.439 ms p50 / 0.520 ms p95**, and the accelerated long model measured **0.475 ms p50 / 0.640 ms p95** for representative inputs, versus roughly 3 ms for the reference Python path. It agreed with the reference model on **15,456 of 15,457** multilingual external examples (99.9935%). This is a Python+Numba optimization and is still not a native-to-native comparison with fastText; the full native implementation remains a future optimization step.
 
 ## Why FastLingo
 

@@ -52,6 +52,8 @@ python -m fastlingo.train --mode long
 python -m fastlingo.evaluate --mode short
 python -m fastlingo.evaluate --mode long
 python -m fastlingo.benchmark --mode both --iterations 100
+# Optional baseline comparison (install requirements-benchmark.txt first)
+python -m fastlingo.benchmark_fasttext --fasttext-model path/to/lid.176.ftz
 ```
 
 Generated artifacts and reports are written under `artifacts/` and `reports/`.
@@ -68,6 +70,7 @@ FastLingo recognizes the 235 labels present in WiLI-2018. It does not identify a
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 - [Citation](CITATION.cff)
 - Raw benchmark profile: `reports/detailed_benchmark.json`
+- Matched fastText comparison: [RESULTS.md](RESULTS.md#matched-fasttext-comparison)
 
 ## License
 

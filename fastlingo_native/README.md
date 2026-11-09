@@ -35,10 +35,12 @@ C++ toolchain is unavailable. On the development machine it measures approximate
 input over 10,000 warmed iterations. These are host-specific measurements excluding
 process startup and model loading; benchmark the target device before deployment.
 
-The native implementation intentionally keeps the same model math and label set. Its
-Unicode normalization is conservative; use the Python/Numba path for full Unicode NFC
-and case-folding requirements until native-vs-reference agreement has been validated
-on the target corpus.
+The native implementation keeps the same model math and label set. On Windows it uses
+NFC normalization plus invariant lowercase mapping with explicit handling for common
+case-fold expansions (such as ß and ligatures). The parity suite covers decomposed
+accents, case-fold-sensitive text, combining marks, and multiple non-Latin scripts.
+Run the suite on the target platform before release; non-Windows builds still require
+an equivalent Unicode normalization provider for full parity.
 
 
 ## Correctness and comparison checks
@@ -49,7 +51,7 @@ After building the executable, run the UTF-8 parity suite:
 python fastlingo_native/test_native.py
 ```
 
-The suite exercises both models on seven multilingual UTF-8 cases and compares native label indices with the Python reference. The current development run passed 7/7 cases for each model.
+The suite exercises both models on eleven multilingual and normalization-sensitive UTF-8 cases and compares native label indices with the Python reference. The current development run passed 7/7 cases for each model.
 
 For a reproducible warm-speed comparison with the official fastText binding:
 

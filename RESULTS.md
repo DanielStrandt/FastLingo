@@ -29,3 +29,15 @@ python -m fastlingo.evaluate --mode short
 python -m fastlingo.evaluate --mode long
 python -m fastlingo.benchmark --mode both --iterations 100
 ```
+
+
+## Matched fastText comparison
+
+Using the official `lid.176.ftz` model (938,013 bytes), an explicit ISO-639-1 to ISO-639-3 mapping, and the WiLI test split restricted to 166 semantically matched labels (83,000 examples):
+
+| Model | Accuracy | Artifact | p50 prediction | p95 prediction |
+|---|---:|---:|---:|---:|
+| FastLingo long | 93.26% | 574.8 kB | 3.15 ms | 3.66 ms |
+| fastText `lid.176.ftz` | 72.21% | 938.0 kB | 0.009 ms | 0.009 ms |
+
+This is a label-intersection comparison, not a claim over fastText's unsupported languages. The fastText Python binding was substantially faster in this host benchmark; FastLingo's advantages here are output coverage, accuracy on this WiLI slice, and smaller artifact size. Reproduce it with `requirements-benchmark.txt` and `python -m fastlingo.benchmark_fasttext --fasttext-model path/to/lid.176.ftz`. Raw mapping and measurements are in `reports/fasttext_comparison.json`.

@@ -27,6 +27,8 @@ Attribute Tatoeba and preserve contributor/provenance information where applicab
 
 The legal status of trained parameters can depend on the jurisdiction, exact data subset, preprocessing, and distribution format. This repository therefore does not represent model artifacts as automatically MIT-licensed. Before commercial or broad redistribution, review the applicable dataset and database-rights questions with qualified counsel.
 
+For every distributed model artifact, preserve the exact training provenance, applicable notices, and a SHA-256 checksum. See [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for the release-bundle and production-validation requirements.
+
 This notice is compliance guidance, not legal advice.
 
 

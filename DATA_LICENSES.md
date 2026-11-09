@@ -28,3 +28,16 @@ Attribute Tatoeba and preserve contributor/provenance information where applicab
 The legal status of trained parameters can depend on the jurisdiction, exact data subset, preprocessing, and distribution format. This repository therefore does not represent model artifacts as automatically MIT-licensed. Before commercial or broad redistribution, review the applicable dataset and database-rights questions with qualified counsel.
 
 This notice is compliance guidance, not legal advice.
+
+
+## External evaluation-only datasets
+
+These datasets were used only for independent evaluation and are not training inputs for FastLingo.
+
+### FLORES-200
+
+The official FLORES-200 release is licensed CC BY-SA 4.0. Preserve attribution and ShareAlike obligations for any redistribution of the evaluation data or adaptations. Source: https://github.com/facebookresearch/flores and https://creativecommons.org/licenses/by-sa/4.0/.
+
+### UDHR-LID
+
+The UDHR-LID packaging, metadata, and annotations are released under CC0 1.0 according to its dataset card. Cite the UDHR source and the GlotLID/UDHR-LID resource when using the benchmark: https://huggingface.co/datasets/cis-lmu/udhr-lid.

@@ -33,6 +33,15 @@ These are external evaluation results, not training-set scores. See [the raw rep
 
 On the WiLI test intersection, FastLingo-long reached **93.26%** accuracy versus **72.21%** for the official lid.176.ftz model, while using a 574.8 kB artifact versus 938.0 kB. The fastText Python binding was much faster because it executes optimized native C++; the current FastLingo benchmark is Python/NumPy, so this is not a native-to-native speed claim. See [RESULTS.md](RESULTS.md) for the full protocol and length sweep.
 
+## Accelerated inference path
+
+For low-latency deployment, install the optional compiled numeric path:
+
+    python -m pip install -r requirements-accelerated.txt
+    python -c "from fastlingo.accelerated import AcceleratedIdentifier; print(AcceleratedIdentifier('artifacts/lid235_long.npz').predict('This is an English sentence.'))"
+
+On the recorded Windows 11 host, the accelerated long model measured **0.476 ms p50**, **0.581 ms p95**, and **0.701 ms p99** for a representative input, versus roughly 3 ms for the reference Python path. It agreed with the reference model on **15,456 of 15,457** multilingual external examples (99.9935%). This is a Python+Numba optimization and is still not a native-to-native comparison with fastText; the full native implementation remains a future optimization step.
+
 ## Why FastLingo
 
 - 235-language output space

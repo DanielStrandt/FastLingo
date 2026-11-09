@@ -47,7 +47,8 @@ def check(mode: str, rows: list[tuple[str, str]], package, model_path: Path, nat
 
 def main() -> int:
     p = argparse.ArgumentParser()
-    p.add_argument("--executable", type=Path, default=ROOT / "fastlingo_native" / "fastlingo_native.exe")
+    default_exe = (ROOT / "fastlingo_native" / "build" / "Release" / "fastlingo_native.exe") if (ROOT / "fastlingo_native" / "build" / "Release" / "fastlingo_native.exe").exists() else ROOT / "fastlingo_native" / "fastlingo_native.exe"
+    p.add_argument("--executable", type=Path, default=default_exe)
     default_model_dir = ROOT / "artifacts" if (ROOT / "artifacts" / "lid235_short.npz").exists() else ROOT / "compact_hdc_v1" / "artifacts"
     p.add_argument("--model-dir", type=Path, default=default_model_dir)
     p.add_argument("--flores-dir", type=Path, default=ROOT / "data" / "raw" / "flores200_dataset")

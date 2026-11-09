@@ -46,12 +46,15 @@ def main() -> int:
     module = __import__(f"{package}.model", fromlist=["CompactIdentifier"])
     CompactIdentifier = module.CompactIdentifier
 
+    # Expand the hand-written corpus into deterministic stress cases so parity
+    # covers many token lengths and repeated normalization paths, not only 11 labels.
+    cases = CASES + [f"{text} sample-{i}" for i in range(100) for text in CASES]
     failures = []
     for mode in ("short", "long"):
         model_path = model_dir / f"lid235_{mode}.npz"
         model = CompactIdentifier(model_path)
-        expected = [model.labels.index(model.predict(text)["label"]) for text in CASES]
-        payload = ("\n".join(CASES) + "\n").encode("utf-8")
+        expected = [model.labels.index(model.predict(text)["label"]) for text in cases]
+        payload = ("\n".join(cases) + "\n").encode("utf-8")
         proc = subprocess.run(
             [str(exe), str(args.native_dir / f"lid235_{mode}.bin"), "--stdin"],
             input=payload,
@@ -63,7 +66,7 @@ def main() -> int:
         if proc.returncode or actual != expected:
             failures.append((mode, expected, actual, proc.stderr.decode(errors="replace")))
         else:
-            print(f"{mode}: {len(CASES)}/{len(CASES)} parity cases passed")
+            print(f"{mode}: {len(cases)}/{len(cases)} parity cases passed")
     if failures:
         for mode, expected, actual, err in failures:
             print(f"{mode}: expected={expected} actual={actual} stderr={err}", file=sys.stderr)

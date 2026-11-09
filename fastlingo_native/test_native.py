@@ -23,6 +23,10 @@ CASES = [
     "Русский текст для проверки.",
     "中文语言识别测试。",
     "ภาษาไทยสำหรับการทดสอบ",
+    "Cafe\u0301 au lait — decomposed accent.",
+    "Straße und STRASSE.",
+    "KELVIN K and ligature ﬃ.",
+    "Μάθηση ελληνικών: ὀδός.",
 ]
 
 

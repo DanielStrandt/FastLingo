@@ -64,3 +64,15 @@ On the development host, the internal native timer measured approximately 0.181 
 
 
 For CI, `create_fixture.py` creates deterministic non-shipped artifacts and the Windows native job builds, exports, and runs the parity suite on every push and pull request.
+
+## Release qualification
+
+The synthetic CI fixture is intentionally small and fast. For release qualification, run the real-artifact check:
+
+```powershell
+python fastlingo_native/release_parity.py --per-label 100
+```
+
+This compares native and Python predictions on deterministic FLORES-200 and UDHR-LID samples using the actual 235-language, 8-channel, 768-dimensional models. It is a gate, not a synthetic smoke test. The current development sample (`--per-label 10`, 3,700 texts) matched 3,687/3,700 labels (99.65%); the remaining mismatches are concentrated in less-common orthographies and mean native C++ is not yet a formally equivalent replacement for Python inference.
+
+The flat native export is intentionally uncompressed and is approximately 1.45 MB per model. The original compressed NPZ artifacts remain approximately 575–624 kB. Therefore the native binary currently prioritizes execution simplicity over the sub-1 MB artifact target.

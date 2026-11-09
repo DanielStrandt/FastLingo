@@ -30,8 +30,10 @@ before scoring.
 
 The checked-in Python/Numba execution path is the reference-compatible fallback when a
 C++ toolchain is unavailable. On the development machine it measures approximately
-0.45 ms p50 per prediction for both short and long inputs after JIT warm-up. Native
-latency must be measured on the target device before making a speed claim.
+0.45 ms p50 per prediction after JIT warm-up. The compiled AVX2 C++ engine measured
+0.181 ms for the short representative input and 0.186 ms for the long representative
+input over 10,000 warmed iterations. These are host-specific measurements excluding
+process startup and model loading; benchmark the target device before deployment.
 
 The native implementation intentionally keeps the same model math and label set. Its
 Unicode normalization is conservative; use the Python/Numba path for full Unicode NFC

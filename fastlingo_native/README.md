@@ -40,3 +40,22 @@ Unicode normalization is conservative; use the Python/Numba path for full Unicod
 and case-folding requirements until native-vs-reference agreement has been validated
 on the target corpus.
 
+
+## Correctness and comparison checks
+
+After building the executable, run the UTF-8 parity suite:
+
+```powershell
+python fastlingo_native/test_native.py
+```
+
+The suite exercises both models on seven multilingual UTF-8 cases and compares native label indices with the Python reference. The current development run passed 7/7 cases for each model.
+
+For a reproducible warm-speed comparison with the official fastText binding:
+
+```powershell
+python fastlingo_native/benchmark_native_vs_fasttext.py --mode short --iterations 1000
+python fastlingo_native/benchmark_native_vs_fasttext.py --mode long --iterations 1000
+```
+
+On the development host, the internal native timer measured approximately 0.181 ms (short) and 0.196 ms (long), while fastText measured approximately 0.0066 ms and 0.0088 ms respectively. The native stdin figure includes pipe overhead and is not used as the warm inference claim. These measurements are host-specific and should be rerun on the deployment device.

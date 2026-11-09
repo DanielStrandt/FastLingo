@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import argparse
 from pathlib import Path
 
 import numpy as np
@@ -31,19 +32,28 @@ CASES = [
 
 
 def main() -> int:
-    if not EXE.exists():
-        print(f"missing {EXE}; build the native target first", file=sys.stderr)
+    p = argparse.ArgumentParser()
+    p.add_argument("--executable", type=Path, default=EXE)
+    p.add_argument("--model-dir", type=Path)
+    p.add_argument("--native-dir", type=Path, default=ROOT / "fastlingo_native")
+    args = p.parse_args()
+    exe = args.executable
+    model_dir = args.model_dir or ((ROOT / "artifacts") if (ROOT / "artifacts" / "lid235_short.npz").exists() else ROOT / "compact_hdc_v1" / "artifacts")
+    package = "fastlingo" if (ROOT / "fastlingo").exists() else "compact_hdc_v1"
+    if not exe.exists():
+        print(f"missing {exe}; build the native target first", file=sys.stderr)
         return 2
-    from compact_hdc_v1.model import CompactIdentifier
+    module = __import__(f"{package}.model", fromlist=["CompactIdentifier"])
+    CompactIdentifier = module.CompactIdentifier
 
     failures = []
     for mode in ("short", "long"):
-        model_path = ROOT / "compact_hdc_v1" / "artifacts" / f"lid235_{mode}.npz"
+        model_path = model_dir / f"lid235_{mode}.npz"
         model = CompactIdentifier(model_path)
         expected = [model.labels.index(model.predict(text)["label"]) for text in CASES]
         payload = ("\n".join(CASES) + "\n").encode("utf-8")
         proc = subprocess.run(
-            [str(EXE), str(ROOT / "fastlingo_native" / f"lid235_{mode}.bin"), "--stdin"],
+            [str(exe), str(args.native_dir / f"lid235_{mode}.bin"), "--stdin"],
             input=payload,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

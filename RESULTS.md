@@ -41,3 +41,15 @@ Using the official `lid.176.ftz` model (938,013 bytes), an explicit ISO-639-1 to
 | fastText `lid.176.ftz` | 72.21% | 938.0 kB | 0.009 ms | 0.009 ms |
 
 This is a label-intersection comparison, not a claim over fastText's unsupported languages. The speed figures are specifically Python fastText binding versus Python/NumPy FastLingo; they are not a native algorithm comparison. A length sweep shows the gap narrowing from about 269x at 16 characters to about 29x at 2,048 characters, because FastLingo's feature work is mostly fixed-cost while fastText's native path scales with input. FastLingo's demonstrated advantages here are output coverage, accuracy on this WiLI slice, and smaller artifact size. Reproduce it with `requirements-benchmark.txt` and `python -m fastlingo.benchmark_fasttext --fasttext-model path/to/lid.176.ftz`. Raw mapping and measurements are in `reports/fasttext_comparison.json` and `reports/fasttext_length_sweep.json`.
+
+
+## Clean external evaluation
+
+To test whether the advantage transfers beyond WiLI/Tatoeba-derived data, FastLingo was evaluated on two public external datasets with the same examples sent to fastText. Labels were normalized from ISO-639-1 to ISO-639-3 and scores were computed only on the 166-label semantic intersection. Sampling is deterministic and capped at 100 examples per label for balanced runtime; the long set additionally requires at least 240 characters per example.
+
+| External dataset | FastLingo artifact | Examples | FastLingo accuracy | fastText accuracy |
+|---|---|---:|---:|---:|
+| FLORES-200 devtest | Short | 9,800 | 88.53% | 81.13% |
+| UDHR-LID test, text ≥240 chars | Long | 2,147 | 88.91% | 75.59% |
+
+FLORES-200 is a multilingual translation benchmark; UDHR-LID is a separate public human-rights text benchmark. These are external evaluations, not training data. Reproduce them with `python -m fastlingo.evaluate_external` after installing `requirements-benchmark.txt` and downloading the public datasets. Raw results are in `reports/external_comparison.json`.

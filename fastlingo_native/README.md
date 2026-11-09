@@ -10,8 +10,8 @@ On Windows, install the **Desktop development with C++** workload (including the
 toolset and Windows SDK), then run from the repository root:
 
 ```powershell
-python fastlingo_native/export_model.py compact_hdc_v1/artifacts/lid235_short.npz fastlingo_native/lid235_short.bin
-python fastlingo_native/export_model.py compact_hdc_v1/artifacts/lid235_long.npz fastlingo_native/lid235_long.bin
+python fastlingo_native/export_model.py artifacts/lid235_short.npz fastlingo_native/lid235_short.bin
+python fastlingo_native/export_model.py artifacts/lid235_long.npz fastlingo_native/lid235_long.bin
 cmake -S fastlingo_native -B fastlingo_native/build -DCMAKE_BUILD_TYPE=Release
 cmake --build fastlingo_native/build --config Release
 ```
@@ -51,7 +51,7 @@ After building the executable, run the UTF-8 parity suite:
 python fastlingo_native/test_native.py
 ```
 
-The suite exercises both models on eleven multilingual and normalization-sensitive UTF-8 cases and compares native label indices with the Python reference. The current development run passed 7/7 cases for each model.
+The suite exercises both models on eleven multilingual and normalization-sensitive UTF-8 cases and compares native label indices with the Python reference. The current development run passed 11/11 cases for each model.
 
 For a reproducible warm-speed comparison with the official fastText binding:
 
@@ -61,3 +61,6 @@ python fastlingo_native/benchmark_native_vs_fasttext.py --mode long --iterations
 ```
 
 On the development host, the internal native timer measured approximately 0.181 ms (short) and 0.196 ms (long), while fastText measured approximately 0.0066 ms and 0.0088 ms respectively. The native stdin figure includes pipe overhead and is not used as the warm inference claim. These measurements are host-specific and should be rerun on the deployment device.
+
+
+For CI, `create_fixture.py` creates deterministic non-shipped artifacts and the Windows native job builds, exports, and runs the parity suite on every push and pull request.

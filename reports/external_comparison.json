@@ -1,0 +1,31 @@
+{
+  "sampling": {
+    "per_label": 100,
+    "long_min_chars": 240
+  },
+  "datasets": {
+    "flores200_devtest_short": {
+      "source": "FLORES-200 devtest",
+      "model": "short",
+      "label_intersection": 166,
+      "examples": 9800,
+      "labels": 98,
+      "fastlingo_accuracy": 0.8853061224489795,
+      "fastlingo_macro_f1": 0.8960505236394567,
+      "fasttext_accuracy": 0.8113265306122449,
+      "fasttext_macro_f1": 0.7945567777512387
+    },
+    "udhr_lid_test_long": {
+      "source": "UDHR-LID test, texts >= min-long-chars",
+      "model": "long",
+      "min_long_chars": 240,
+      "label_intersection": 166,
+      "examples": 2147,
+      "labels": 105,
+      "fastlingo_accuracy": 0.8891476478807638,
+      "fastlingo_macro_f1": 0.9009839481867804,
+      "fasttext_accuracy": 0.7559385188635305,
+      "fasttext_macro_f1": 0.7261972233712619
+    }
+  }
+}

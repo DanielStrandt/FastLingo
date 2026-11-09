@@ -1,0 +1,11 @@
+{
+  "note": "Python fastText binding versus Python/NumPy FastLingo implementation; not a native algorithm comparison",
+  "measurements": [
+    {"characters": 16, "fasttext_p50_ms": 0.0114, "fastlingo_p50_ms": 3.0659, "fastlingo_over_fasttext": 268.9},
+    {"characters": 64, "fasttext_p50_ms": 0.0186, "fastlingo_p50_ms": 3.1524, "fastlingo_over_fasttext": 169.5},
+    {"characters": 128, "fasttext_p50_ms": 0.0276, "fastlingo_p50_ms": 3.2736, "fastlingo_over_fasttext": 118.6},
+    {"characters": 512, "fasttext_p50_ms": 0.0544, "fastlingo_p50_ms": 3.5023, "fastlingo_over_fasttext": 64.4},
+    {"characters": 2048, "fasttext_p50_ms": 0.1528, "fastlingo_p50_ms": 4.4170, "fastlingo_over_fasttext": 28.9}
+  ]
+}
+

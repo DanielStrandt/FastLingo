@@ -54,6 +54,12 @@ On the recorded Windows 11 host, the accelerated short model measured **0.439 ms
 
 FastLingo is designed for applications where a small, private, low-latency language signal is more useful than a large general-purpose model.
 
+## Model artifacts and release integrity
+
+This repository ships source code and evaluation reports, not trained model binaries. To use FastLingo, train the short and long artifacts locally from the documented datasets, or obtain a separately published release bundle. Any legitimate release bundle should include SHA-256 checksums, dataset provenance, and the applicable data-rights notices. See [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) and [DATA_LICENSES.md](DATA_LICENSES.md).
+
+For production-critical deployments, rerun the native parity, accuracy, latency, memory, integrity, and rollback checks in [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) on the target hardware.
+
 ## Quick start
 
 From the repository root:

@@ -51,7 +51,7 @@ After building the executable, run the UTF-8 parity suite:
 python fastlingo_native/test_native.py
 ```
 
-The suite exercises both models on eleven multilingual and normalization-sensitive UTF-8 cases and compares native label indices with the Python reference. The current development run passed 11/11 cases for each model.
+The suite exercises both models on 1,111 deterministic multilingual and normalization-sensitive UTF-8 cases and compares native label indices with the Python reference. The current development run passed 11/11 cases for each model.
 
 For a reproducible warm-speed comparison with the official fastText binding:
 

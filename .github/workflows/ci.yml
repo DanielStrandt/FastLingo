@@ -14,3 +14,19 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install -r requirements.txt
       - run: python -m unittest discover -s tests -v
+
+  native-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt
+      - run: python fastlingo_native/create_fixture.py
+      - run: python fastlingo_native/export_model.py artifacts/lid235_short.npz fastlingo_native/lid235_short.bin
+      - run: python fastlingo_native/export_model.py artifacts/lid235_long.npz fastlingo_native/lid235_long.bin
+      - run: cmake -S fastlingo_native -B fastlingo_native/build -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build fastlingo_native/build --config Release
+      - run: python fastlingo_native/test_native.py --model-dir artifacts --executable fastlingo_native/build/Release/fastlingo_native.exe
+

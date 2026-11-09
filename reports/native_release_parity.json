@@ -1,6 +1,6 @@
 {
   "sampling": {
-    "per_label": 10,
+    "per_label": 100,
     "long_min_chars": 240
   },
   "environment": {
@@ -9,23 +9,23 @@
   },
   "datasets": {
     "short": {
-      "examples": 980,
-      "matches": 980,
+      "examples": 9800,
+      "matches": 9800,
       "accuracy": 1.0,
       "model_sha256": "bfafac9fe21cae28e22b7646af52c7e08f31b6b211c0cef1aaf7e6188cfc0ee5",
       "mismatches": []
     },
     "long": {
-      "examples": 1025,
-      "matches": 1025,
+      "examples": 2147,
+      "matches": 2147,
       "accuracy": 1.0,
       "model_sha256": "a597b55fd3406422e236a640e57ed784ce5e8d566e117919e33dc71dfdb124ee",
       "mismatches": []
     }
   },
   "overall": {
-    "examples": 2005,
-    "matches": 2005,
+    "examples": 11947,
+    "matches": 11947,
     "accuracy": 1.0
   }
 }

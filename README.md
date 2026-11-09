@@ -18,6 +18,21 @@ Each model is standalone, CPU-friendly, and smaller than 1 MB.
 
 The short score is measured on a deterministic mixed WiLI/Tatoeba holdout. The long score is measured on the complete 117,500-example WiLI test split. Latency is measured with Python on Windows 11 using 100 iterations per input length; it is a reproducible implementation benchmark, not a universal edge-device guarantee.
 
+## Independent external evaluation
+
+To test transfer beyond the training sources, we evaluated each model on a separate public benchmark and compared it with fastText on the same examples. Scores use the shared 166-language ISO label intersection and a balanced, deterministic sample of up to 100 examples per label.
+
+| External benchmark | FastLingo model | FastLingo accuracy | fastText accuracy | FastLingo macro-F1 | fastText macro-F1 |
+|---|---|---:|---:|---:|---:|
+| FLORES-200 devtest (short) | Short | **88.53%** | 81.13% | **89.61%** | 79.46% |
+| UDHR-LID test, texts ≥240 chars (long) | Long | **88.91%** | 75.59% | **90.10%** | 72.62% |
+
+These are external evaluation results, not training-set scores. See [the raw report](reports/external_comparison.json) and [the reproducible evaluator](fastlingo/evaluate_external.py).
+
+## Matched fastText comparison
+
+On the WiLI test intersection, FastLingo-long reached **93.26%** accuracy versus **72.21%** for the official lid.176.ftz model, while using a 574.8 kB artifact versus 938.0 kB. The fastText Python binding was much faster because it executes optimized native C++; the current FastLingo benchmark is Python/NumPy, so this is not a native-to-native speed claim. See [RESULTS.md](RESULTS.md) for the full protocol and length sweep.
+
 ## Why FastLingo
 
 - 235-language output space

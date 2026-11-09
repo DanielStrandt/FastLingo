@@ -31,8 +31,8 @@ before scoring.
 The checked-in Python/Numba execution path is the reference-compatible fallback when a
 C++ toolchain is unavailable. On the development machine it measures approximately
 0.45 ms p50 per prediction after JIT warm-up. The compiled AVX2 C++ engine measured
-0.181 ms for the short representative input and 0.186 ms for the long representative
-input over 10,000 warmed iterations. These are host-specific measurements excluding
+0.228 ms for the short representative input and 0.230 ms for the long representative
+input over 5,000 warmed iterations. These are host-specific measurements excluding
 process startup and model loading; benchmark the target device before deployment.
 
 The native implementation keeps the same model math and label set. On Windows it uses
@@ -60,7 +60,7 @@ python fastlingo_native/benchmark_native_vs_fasttext.py --mode short --iteration
 python fastlingo_native/benchmark_native_vs_fasttext.py --mode long --iterations 1000
 ```
 
-On the development host, the internal native timer measured approximately 0.181 ms (short) and 0.196 ms (long), while fastText measured approximately 0.0066 ms and 0.0088 ms respectively. The native stdin figure includes pipe overhead and is not used as the warm inference claim. These measurements are host-specific and should be rerun on the deployment device.
+On the development host, the internal native timer measured approximately 0.228 ms (short) and 0.230 ms (long), while fastText measured approximately 0.0081 ms and 0.0118 ms respectively. The native stdin figure includes pipe overhead and is not used as the warm inference claim. These measurements are host-specific and should be rerun on the deployment device.
 
 
 For CI, `create_fixture.py` creates deterministic non-shipped artifacts and the Windows native job builds, exports, and runs the parity suite on every push and pull request.

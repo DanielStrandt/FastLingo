@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.20)
+project(fastlingo_native LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_executable(fastlingo_native fastlingo.cpp)
+if(MSVC)
+  target_compile_options(fastlingo_native PRIVATE /O2 /arch:AVX2)
+else()
+  target_compile_options(fastlingo_native PRIVATE -O3 -march=native)
+endif()
+

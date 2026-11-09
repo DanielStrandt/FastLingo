@@ -9,11 +9,27 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#ifdef _WIN32
+#include <windows.h>
+#pragma comment(lib, "normaliz.lib")
+#undef min
+#undef max
+#endif
 
 struct Model { uint32_t labels, channels, dims, sparsity; uint64_t seed; std::vector<uint8_t> nvals; std::vector<float> weights,bias; std::vector<int8_t> proto; std::vector<std::string> names; };
 static uint64_t smix(uint64_t z){ z+=0x9E3779B97F4A7C15ULL; z=(z^(z>>30))*0xBF58476D1CE4E5B9ULL; z=(z^(z>>27))*0x94D049BB133111EBULL; return z^(z>>31); }
 static uint64_t hash_code(const std::vector<uint32_t>& c,size_t start,size_t n,uint64_t salt){ uint64_t h=0xCBF29CE484222325ULL^salt; for(size_t i=0;i<n;i++){h*=0x100000001B3ULL; h+=uint64_t(c[start+i])+1;} h^=h>>30; h*=0xBF58476D1CE4E5B9ULL; h^=h>>27; h*=0x94D049BB133111EBULL; return h^(h>>31); }
-static std::vector<uint32_t> utf8(const std::string& s,bool fold){ std::vector<uint32_t> out{0x110000}; bool space=true; size_t i=0; while(i<s.size()){ unsigned char b=s[i]; uint32_t cp=0; size_t k=1; if(b<0x80) cp=b; else if((b&0xE0)==0xC0&&i+1<s.size()){cp=((b&31)<<6)|(s[i+1]&63);k=2;} else if((b&0xF0)==0xE0&&i+2<s.size()){cp=((b&15)<<12)|((s[i+1]&63)<<6)|(s[i+2]&63);k=3;} else if((b&0xF8)==0xF0&&i+3<s.size()){cp=((b&7)<<18)|((s[i+1]&63)<<12)|((s[i+2]&63)<<6)|(s[i+3]&63);k=4;} else {i++;continue;} i+=k; if(cp==9||cp==10||cp==13||cp==32){if(!space){out.push_back(0x110003);space=true;} continue;} if(cp<32||cp==0x7f) continue; if(space){out.push_back(0x110002);space=false;} if(fold&&cp>=65&&cp<=90) cp+=32; out.push_back(cp);} if(!space) out.push_back(0x110003); out.push_back(0x110001); return out; }
+static std::string normalize_utf8(const std::string& input,bool fold){
+#ifdef _WIN32
+ int wn=MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,input.data(),int(input.size()),nullptr,0); if(wn<=0) return input; std::wstring w(wn,L'\0'); MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,input.data(),int(input.size()),w.data(),wn);
+ int nn=NormalizeString(NormalizationC,w.data(),int(w.size()),nullptr,0); if(nn>0){std::wstring n(nn,L'\0'); NormalizeString(NormalizationC,w.data(),int(w.size()),n.data(),nn); w.swap(n);}
+ if(fold){int ln=LCMapStringEx(LOCALE_NAME_INVARIANT,LCMAP_LOWERCASE,w.data(),int(w.size()),nullptr,0,nullptr,nullptr,0); if(ln>0){std::wstring l(ln,L'\0'); LCMapStringEx(LOCALE_NAME_INVARIANT,LCMAP_LOWERCASE,w.data(),int(w.size()),l.data(),ln,nullptr,nullptr,0); w.swap(l); std::wstring r; for(wchar_t cp:w){if(cp==0x00DF||cp==0x1E9E) r+=L"ss"; else if(cp==0x03C2) r+=L'\u03C3'; else if(cp==0xFB00) r+=L"ff"; else if(cp==0xFB01) r+=L"fi"; else if(cp==0xFB02) r+=L"fl"; else if(cp==0xFB03) r+=L"ffi"; else if(cp==0xFB04) r+=L"ffl"; else r+=cp;} w.swap(r);}}
+ int outn=WideCharToMultiByte(CP_UTF8,0,w.data(),int(w.size()),nullptr,0,nullptr,nullptr); if(outn<=0) return input; std::string out(outn,'\0'); WideCharToMultiByte(CP_UTF8,0,w.data(),int(w.size()),out.data(),outn,nullptr,nullptr); return out;
+#else
+ return input;
+#endif
+}
+static std::vector<uint32_t> utf8(const std::string& s,bool fold){ std::string normalized=normalize_utf8(s,fold); std::vector<uint32_t> out{0x110000}; bool space=true; size_t i=0; while(i<normalized.size()){ unsigned char b=normalized[i]; uint32_t cp=0; size_t k=1; if(b<0x80) cp=b; else if((b&0xE0)==0xC0&&i+1<normalized.size()){cp=((b&31)<<6)|(normalized[i+1]&63);k=2;} else if((b&0xF0)==0xE0&&i+2<normalized.size()){cp=((b&15)<<12)|((normalized[i+1]&63)<<6)|(normalized[i+2]&63);k=3;} else if((b&0xF8)==0xF0&&i+3<normalized.size()){cp=((b&7)<<18)|((normalized[i+1]&63)<<12)|((normalized[i+2]&63)<<6)|(normalized[i+3]&63);k=4;} else {i++;continue;} i+=k; if(cp==9||cp==10||cp==13||cp==32){if(!space){out.push_back(0x110003);space=true;} continue;} if(cp<32||cp==0x7f) continue; if(space){out.push_back(0x110002);space=false;} if(fold&&cp>=65&&cp<=90) cp+=32; out.push_back(cp);} if(!space) out.push_back(0x110003); out.push_back(0x110001); return out; }
 static std::vector<int8_t> encode(const Model&m,const std::string& text){ std::vector<std::vector<uint64_t>> all; int maxn=*std::max_element(m.nvals.begin(),m.nvals.end()); for(int view=0;view<2;view++){auto cps=utf8(text,view==1); for(int n=1;n<=maxn;n++){std::vector<uint64_t> h; if(cps.size()>=size_t(n)){for(size_t st=0;st+n<=cps.size();st++){uint64_t salt=((view+1)*0x9E3779B185EBCA87ULL)^(uint64_t(n)*0xC2B2AE3D27D4EB4FULL); h.push_back(hash_code(cps,st,n,salt));}} all.push_back(std::move(h));}}
  std::vector<int8_t> out(size_t(m.channels)*m.dims); for(int view=0;view<2;view++) for(size_t ni=0;ni<m.nvals.size();ni++){int n=m.nvals[ni]; std::vector<uint64_t> hs=all[view*maxn+n-1]; std::sort(hs.begin(),hs.end()); std::vector<float> v(m.dims); for(size_t p=0;p<hs.size();){size_t e=p+1; while(e<hs.size()&&hs[e]==hs[p]) ++e; float w=1.f+std::log(float(e-p)); uint64_t key=hs[p]; uint64_t base=key^(m.seed+uint64_t(view*m.nvals.size()+ni)*0x9E3779B1ULL); for(uint32_t j=0;j<m.sparsity;j++){uint64_t code=smix(base+uint64_t(j)*0xD6E8FEB86659FD93ULL); size_t idx=code&(m.dims-1); v[idx]+=w*((code>>63)?-1.f:1.f);} p=e;} float norm=0; for(float x:v) norm+=x*x; norm=std::sqrt(norm); for(uint32_t d=0;d<m.dims;d++){float q=norm?std::round(std::max(-127.f,std::min(127.f,v[d]/norm*127.f))):0; out[(view*m.nvals.size()+ni)*m.dims+d]=int8_t(q);}}
  return out; }

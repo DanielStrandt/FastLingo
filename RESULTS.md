@@ -53,3 +53,8 @@ To test whether the advantage transfers beyond WiLI/Tatoeba-derived data, FastLi
 | UDHR-LID test, text ≥240 chars | Long | 2,147 | 88.91% | 75.59% |
 
 FLORES-200 is a multilingual translation benchmark; UDHR-LID is a separate public human-rights text benchmark. These are external evaluations, not training data. Reproduce them with `python -m fastlingo.evaluate_external` after installing `requirements-benchmark.txt` and downloading the public datasets. Raw results are in `reports/external_comparison.json`.
+
+
+## Accelerated inference
+
+The optional Numba path preserves the model math while compiling the numeric encoding kernel and using packed vector scoring. On the same Windows 11 host, the long model measured 0.476 ms p50, 0.581 ms p95, and 0.701 ms p99 on a representative input. It agreed with the reference implementation on 15,456/15,457 (99.9935%) multilingual external examples. This reaches sub-millisecond inference for the current Python distribution, but it does not yet beat native fastText's approximately 0.01 ms result; a native Rust/C++ implementation would be required for that claim.
